@@ -1,0 +1,7 @@
+<!--logs.wxml-->
+<view class="container-parkpicture">
+  <image class="full-width-image" src="/image/parking1.jpg" mode="widthFix"/>
+</view>
+<view class="text-container">
+  <text class="text-style" bindtap="parkings">您现在位于停车场南入口</text>
+</view>

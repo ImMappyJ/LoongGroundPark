@@ -1,0 +1,23 @@
+<!-- <view class="button-sp-are">
+  <button class="weui-btn" type="primary" size="mini"  bindtap="onClickOpen">开灯</button>
+  <button type="warn" size="mini"  bindtap="onClickOff">关灯</button>
+  <button size="mini">温度：{{temperature}}℃</button>
+  <button size="mini">湿度：{{humidity}}</button>
+</view> -->
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="container-avatar">
+      <image class="avatar" src="/image/avatar.png" mode="widthFix" />
+    </view>
+    <view class="nickname-wrapper">
+      <text class="nickname-label">手机号</text>
+      <input class="nickname-input" placeholder="请输入手机号" bindinput="onPhoneNumberInput" />
+    </view>
+    <button class="button-style" bindtap="car" style="background: green;color:#fff;">车牌登记</button>
+    <view class="usermotto">
+      <text class="user-motto">{{motto}}</text>
+    </view>
+
+  </view>
+</scroll-view>

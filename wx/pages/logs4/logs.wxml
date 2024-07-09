@@ -1,0 +1,13 @@
+<!--logs.wxml-->
+<view class="container-parkpicture">
+  <image class="full-width-image" src="/image/parking5.jpg" mode="widthFix"/>
+</view>
+<view class="text-container">
+  <text class="text-style" bindtap="parkings">前方第一个路口左转</text>
+</view>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <block wx:for="{{times}}" wx:key="index" wx:for-item="time" wx:for-index="idx">
+    <view class="log-item">{{texts[idx]}}</view>
+  </block>
+</scroll-view>

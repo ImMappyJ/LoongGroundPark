@@ -1,0 +1,13 @@
+<!--logs.wxml-->
+<view class="container-parkpicture">
+  <image class="full-width-image" src="/image/parking5.jpg" mode="widthFix"/>
+</view>
+<view class="text-container">
+  <text class="text-style">目标停车位在您的左侧</text>
+</view>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <block wx:for="{{times}}" wx:key="index" wx:for-item="time" wx:for-index="idx">
+    <view class="log-item">{{texts[idx]}}</view>
+  </block>
+</scroll-view>
