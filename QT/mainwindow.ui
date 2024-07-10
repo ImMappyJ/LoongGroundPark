@@ -33,9 +33,9 @@
      <enum>QTabWidget::TabShape::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
-    <widget class="QWidget" name="tab_main_3">
+    <widget class="QWidget" name="main_tab">
      <attribute name="title">
       <string>主菜单</string>
      </attribute>
@@ -92,7 +92,7 @@ font-size: large;</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLCDNumber" name="lcdNumber_10">
+         <widget class="QLCDNumber" name="free_lcdnumber">
           <property name="segmentStyle">
            <enum>QLCDNumber::SegmentStyle::Filled</enum>
           </property>
@@ -102,7 +102,7 @@ font-size: large;</string>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QLCDNumber" name="lcdNumber_9">
+         <widget class="QLCDNumber" name="occupied_lcdnumber">
           <property name="smallDecimalPoint">
            <bool>false</bool>
           </property>
@@ -112,7 +112,7 @@ font-size: large;</string>
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QLCDNumber" name="lcdNumber_12">
+         <widget class="QLCDNumber" name="sensor_lcdnumber">
           <property name="intValue" stdset="0">
            <number>23</number>
           </property>
@@ -128,7 +128,7 @@ font-size: large;</string>
         <item row="0" column="3">
          <widget class="QLabel" name="time_view">
           <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; font-weight:700;&quot;&gt;2024.07.07                 21:26&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;0000.00.00 00:00:00&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -307,17 +307,17 @@ font-size: large;</string>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab_parkposition_3">
+    <widget class="QWidget" name="position_tab">
      <attribute name="title">
       <string>车位管理</string>
      </attribute>
-     <widget class="QTreeWidget" name="treeWidget_3">
+     <widget class="QTreeWidget" name="cars_treelist">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>110</y>
         <width>911</width>
-        <height>521</height>
+        <height>661</height>
        </rect>
       </property>
       <property name="font">
@@ -382,6 +382,238 @@ font-size: large;</string>
       <item>
        <property name="text">
         <string>-2F</string>
+       </property>
+      </item>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="sensor_tab">
+     <attribute name="title">
+      <string>传感器管理</string>
+     </attribute>
+     <widget class="QPushButton" name="addSensor_button">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>30</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>添加</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="deleteSensor_button">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>30</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>删除</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="currentID_text">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>40</y>
+        <width>104</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Current</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>40</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Top</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="topID_text">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>40</y>
+        <width>104</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>40</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Right</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="rightID_text">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>40</y>
+        <width>104</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>100</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Bottom</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="bottomID_text">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>100</y>
+        <width>104</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_17">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>100</y>
+        <width>67</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Left</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="leftID_text">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>100</y>
+        <width>104</width>
+        <height>41</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="loadin_button">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>100</y>
+        <width>89</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>同步载入</string>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="sensors_treelist">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>911</width>
+        <height>651</height>
+       </rect>
+      </property>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Top</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Right</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Bottom</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Left</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>ParkSpace</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>100</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>ParkSpace</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="parkspace_combobox">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>100</y>
+        <width>86</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Yes</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>No</string>
        </property>
       </item>
      </widget>

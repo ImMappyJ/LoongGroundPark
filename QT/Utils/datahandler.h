@@ -3,6 +3,7 @@
 #define DB_BASE_CARS "db_cars"
 #define DB_BASE_SENSORS "db_sensors"
 #include <string>
+#include <QDebug>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
@@ -30,8 +31,10 @@ private:
     int left;
     int right;
     int bottom;
+    int isParkSpace;
 public:
-    DataSensor(int id,int top,int left,int right,int bottom);
+    static QSqlDatabase db;
+    DataSensor(int id,int top,int left,int right,int bottom,bool isParkSpace);
     static int add(DataSensor sensor);
     static int clear();
     static DataSensor query(int id);

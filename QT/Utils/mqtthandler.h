@@ -9,8 +9,10 @@
 #include <QMetaObject>
 
 
-class MQTTHandler{
-private:
+class MQTTHandler:QObject{
+    Q_OBJECT
+public slots:
+    static void receive_message_slot(QMQTT::Message msg);
 public:
     static QMQTT::Client* client;
     static void initMQTT(QString clientID,QByteArray pwd,QString uname,QString connurl,int port);

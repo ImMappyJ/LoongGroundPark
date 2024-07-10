@@ -2,6 +2,11 @@
 
 QMQTT::Client* MQTTHandler::client = nullptr;
 
+void MQTTHandler::receive_message_slot(QMQTT::Message msg)
+{
+    qDebug() << msg.payload();
+}
+
 void MQTTHandler::initMQTT(QString clientID, QByteArray pwd, QString uname, QString connurl,int port)
 {
     client = new QMQTT::Client();
