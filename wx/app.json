@@ -2,13 +2,11 @@
   "pages": [
     "pages/index/index",
     "pages/logs/logs",
-    "pages/carnumber/carnumber",
     "pages/logs1/logs1",
     "pages/logs2/logs",
     "pages/logs3/logs",
     "pages/logs4/logs",
-    "pages/logs5/logs",
-    "pages/logs6/logs"
+    "pages/logs5/logs"
   ],
   "window": {
     "navigationBarTextStyle": "black",

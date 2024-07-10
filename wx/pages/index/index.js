@@ -5,12 +5,6 @@ let that = null;
 Page({
   data: {
     phoneNumber: "",
-    motto: '智慧停车系统',
-    receive: "",
-    //设置温度值和湿度值 
-    temperature: "",
-    humidity: "",
-
     client: null, //记录重连的次数
     reconnectCounts: 0, //MQTT连接的配置
     options: {
@@ -25,21 +19,86 @@ Page({
     },
 
     aliyunInfo: {
-      productKey: 'test', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
-      deviceName: 'wechat', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
-      deviceSecret: 'test', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
-      regionId: 'cn-shanghai', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
-      pubTopic: '/test/wechat/user/topic', //发布消息的主题
-      subTopic: '/test/wechat/user/topic', //订阅消息的主题
+      productKey: '', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      deviceName: '', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      deviceSecret: '', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      regionId: '', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      pubTopic: '', //发布消息的主题
+      subTopic: '', //订阅消息的主题
     },
+    provinces: [
+      ['京', '沪', '粤', '津', '冀', '晋', '蒙', '辽', '吉', '黑'],
+      ['苏', '浙', '皖', '闽', '赣', '鲁', '豫', '鄂', '湘'],
+      ['桂', '琼', '渝', '川', '贵', '云', '藏'],
+      ['陕', '甘', '青', '宁', '新'],
+    ],
+    // 车牌输入
+    numbers: [
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+      ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+      ["Z", "X", "C", "V", "B", "N", "M"]
+    ],
+    carnum: [],
+    showNewPower: false,
+    KeyboardState: false
   },
   onPhoneNumberInput: function(e) {
     this.setData({
-      phoneNumber: e.detail.value
+      phoneNumber: e.detail.value,
+      carNumber: e.detail.value
     });
   },
-  car: function() {
+  bindChoose(e) {
+    if (!this.data.carnum[6] || this.data.showNewPower) {
+      var arr = [];
+      arr[0] = e.target.dataset.val;
+      this.data.carnum = this.data.carnum.concat(arr)
+      this.setData({
+        carnum: this.data.carnum
+      })
+    }
+    if (this.data.carnum[6]) {
+      this.setData({
+        showNewPower: true,
+        KeyboardState: true
+      })
+    }
+  },
+  bindDelChoose() {
+    if (this.data.carnum.length != 0) {
+      this.data.carnum.splice(this.data.carnum.length - 1, 1);
+      this.setData({
+        carnum: this.data.carnum
+      })
+    }
+  },
+  showPowerBtn() {
+    this.setData({
+      showNewPower: true,
+      KeyboardState: true
+    })
+  },
+  closeKeyboard() {
+    this.setData({
+      KeyboardState: false
+    })
+  },
+  openKeyboard() {
+    this.setData({
+      KeyboardState: true
+    })
+  },
+  //清空按钮
+  deleteAll() {
+    this.setData({
+      carnum: [],
+    })
+  },
+  submitNumber: function() {
     const phoneNumber = this.data.phoneNumber;
+    var carno = this.data.carnum;
+    var carnonew = carno.join('');
     if (!phoneNumber) {
       wx.showToast({
         title: '请输入手机号',
@@ -48,22 +107,31 @@ Page({
       });
       return;
     }
+    if (this.data.carnum.length < 7) {
+      wx.showToast({
+        title: '请输入完整的车牌!',
+        icon: 'none',
+        duration: 2000,
+      });
+      return;
+    }
+    if (this.data.carnum[6]) {
+      console.log(carnonew);
+    }
     
     // 发送手机号到云端
-    this.sendPhoneNumber(phoneNumber);
-    wx.navigateTo({
-      url: '../carnumber/carnumber'
-    })
-  },
-  sendPhoneNumber: function(phoneNumber) {
-    this.sendCommond('register', { phoneNumber: phoneNumber });
-  },
-  bindViewTap() {
+    this.sendNumber(phoneNumber, carnonew);
     wx.navigateTo({
       url: '../logs/logs'
     })
   },
+  sendNumber: function(phoneNumber, carNumber) {
+    this.sendCommond( { bindWx: { phone:phoneNumber, carSign:carNumber }} );
+  },
   onLoad: function () {
+    this.setData({
+      carnum: ['鄂'],
+    }),
     that = this;
     let clientOpt = aliyunOpt.getAliyunIotMqttClient({
       productKey: that.data.aliyunInfo.productKey,
@@ -124,17 +192,9 @@ Page({
       console.log(" 服务器offline的回调")
     })
   },
-
-  onClickOpen() {
-    that.sendCommond('set', 1);
-  },
-  onClickOff() {
-    that.sendCommond('set', 0);
-  },
-  sendCommond(cmd, data) {
+  sendCommond(params) {
     let sendData = {
-      cmd: cmd,
-      data: data,
+      params: params
     };
 
     //此函数是订阅的函数，因为放在访问服务器的函数后面没法成功订阅topic，因此把他放在这个确保订阅topic的时候已成功连接服务器
@@ -142,13 +202,12 @@ Page({
     /*this.data.client.subscribe(this.data.aliyunInfo.subTopic,function(err){
       if(!err){
         console.log("订阅成功");
-      };
+      }
       wx.showModal({
         content: "订阅成功",
         showCancel: false,
       })
     })  */
-
 
     //发布消息
     if (this.data.client && this.data.client.connected) {
