@@ -15,13 +15,16 @@ int Sensors::set_sensor_nearby(int i, int t, int l, int r, int b)
 
 bool Sensors::is_in_the_list(int id)
 {
-    return id > 0 && id <= this->sensor_list.capacity();
+    for(Sensor* s:sensor_list){
+        if(s->getid() == id) return true;
+    }
+    return false;
 }
 
 Sensor* Sensors::find_sensor(int id){
-    for(auto i = this->sensor_list.begin();i != this->sensor_list.end();i++){
-        if((*i)->getid() == id){
-            return *i;
+    for(Sensor* s:sensor_list){
+        if((s)->getid() == id){
+            return s;
         }
     }
     return NULL;
@@ -30,18 +33,7 @@ Sensor* Sensors::find_sensor(int id){
 int Sensors::add_sensor(int id, bool isParkSpace)
 {
     Sensor* sensor = new Sensor(id,isParkSpace);
-    this->sensor_list.push_back(sensor);
-    return STATUS_OK;
-}
-
-int Sensors::init_sensor_position(int *id, int *top, int *left, int *right, int *bottom)
-{
-    int temp = 0;
-    while(id[temp] > 0){
-        if(this->set_sensor_nearby(id[temp],top[temp],left[temp],right[temp],bottom[temp]) == STATUS_ERROR){
-            return STATUS_ERROR;
-        }
-    }
+    this->sensor_list.append(sensor);
     return STATUS_OK;
 }
 

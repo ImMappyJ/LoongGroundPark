@@ -20,8 +20,8 @@ bool Sensor::is_park_space(){
     return this->isParkingSpace;
 }
 
-std::vector<Sensor*> Sensor::get_nearby_sensor(){
-    std::vector<Sensor*> s;
+QList<Sensor*> Sensor::get_nearby_sensor(){
+    QList<Sensor*> s;
     if(this->top != NULL) s.push_back(this->top);
     if(this->left != NULL) s.push_back(this->left);
     if(this->right != NULL) s.push_back(this->right);

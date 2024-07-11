@@ -5,13 +5,12 @@
 
 class Sensors{
 private:
-    std::vector<Sensor*> sensor_list;
-    int set_sensor_nearby(int i,int t,int l,int r,int b);
+    QList<Sensor*> sensor_list;
     bool is_in_the_list(int id);
 public:
     Sensor* find_sensor(int id);
     int add_sensor(int id,bool isParkSpace);
-    int init_sensor_position(int* id,int* top,int* left,int* right,int* bottom);
+    int set_sensor_nearby(int i,int t,int l,int r,int b);
 };
 
 #endif // SENSORS_H

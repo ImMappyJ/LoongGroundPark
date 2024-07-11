@@ -8,7 +8,7 @@ int Car::moveTo(int id){
     return STATUS_OK;
 }
 
-Car::Car(std::string sign, int target_position)
+Car::Car(QString sign, int target_position)
 {
     this->sign = sign;
     this->target_position = target_position;
@@ -28,6 +28,6 @@ int Car::bindWx(){
     return STATUS_OK;
 }
 
-std::string Car::getSign(){
+QString Car::getSign(){
     return this->sign;
 }

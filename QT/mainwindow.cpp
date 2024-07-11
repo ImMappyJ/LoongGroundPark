@@ -7,9 +7,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    initUI();
-    initMQTT();
     initSQL();
+    initUI();
+    initList();
+    initMQTT();
 }
 
 MainWindow::~MainWindow()
@@ -33,17 +34,38 @@ void MainWindow::timer_time_out()
 
 void MainWindow::initMQTT(){
     MQTTHandler::initMQTT(
-        "t.Loong|securemode=2,signmethod=hmacsha256,timestamp=t|",
-        "t",
-        "Loong&t",
-        "iot-t.mqtt.iothub.aliyuncs.com",1883);
+        "k153zuyAMH6.Loong|securemode=2,signmethod=hmacsha256,timestamp=1720428901230|",
+        "ecb4c06d043bdbdc99656e344dab5cb392fe6dd4fed65db71b73df2474d808a0",
+        "Loong&k153zuyAMH6",
+        "iot-06z00i2zvzet7ip.mqtt.iothub.aliyuncs.com",1883);
     MQTTHandler::conn();
     connect(MQTTHandler::client,SIGNAL(received(QMQTT::Message)),this,SLOT(receive_message_slot(QMQTT::Message)));
-    MQTTHandler::subscribe("/t/Loong/user/request");
+    MQTTHandler::subscribe("/k153zuyAMH6/Loong/user/request");
 }
 
 void MainWindow::initSQL()
 {
+    qDebug() << "SQL initing...";
+    SQLDB::initdb();
+    DataSensor::initdb();
+    qDebug() << "Finished";
+}
+
+void MainWindow::initList()
+{
+    this->sensors = new Sensors();
+    this->cars = new Cars();
+    QList<DataSensor*> datalist = DataSensor::getAll();
+    for(DataSensor* sensordata:datalist){
+        this->sensors->add_sensor(sensordata->getId(),sensordata->getIsParkSpace());
+        qDebug() << "exec";
+        this->sensors->set_sensor_nearby(sensordata->getId(),sensordata->getTop(),sensordata->getLeft(),sensordata->getRight(),sensordata->getBottom());
+    }
+}
+
+int MainWindow::addNewCar()
+{
+
 }
 
 void MainWindow::initUI(){
@@ -51,6 +73,20 @@ void MainWindow::initUI(){
     connect(timer,SIGNAL(timeout()),this,SLOT(timer_time_out()));
     timer->setInterval(1000);
     timer->start(5);
+    //timely time show
+    QList<DataSensor*> slist = DataSensor::getAll();
+    for(DataSensor* data:slist){
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        item->setText(0,QString::number(data->getId()));
+        item->setText(1,QString::number(data->getTop()));
+        item->setText(2,QString::number(data->getRight()));
+        item->setText(3,QString::number(data->getBottom()));
+        item->setText(4,QString::number(data->getLeft()));
+        item->setText(5,data->getIsParkSpace()?"Yes":"No");
+        ui->sensors_treelist->addTopLevelItem(item);
+        delete(data);
+    }
+    //sensors list show
 }
 
 void MainWindow::on_addSensor_button_clicked()
@@ -84,6 +120,29 @@ void MainWindow::on_deleteSensor_button_clicked()
 
 void MainWindow::on_loadin_button_clicked()
 {
-    DataSensor* data = new DataSensor(1,2,3,4,5,false);
+    if(DataSensor::clear() == STATUS_ERROR){
+        QMessageBox::warning(this,"Warning","Clear failed");
+        return;
+    }
+    for(int i = 0;i < ui->sensors_treelist->topLevelItemCount();i++){
+        QTreeWidgetItem* item = ui->sensors_treelist->topLevelItem(i);
+        DataSensor* data = new DataSensor(item->text(0).toInt(),item->text(1).toInt(),item->text(4).toInt(),item->text(2).toInt(),item->text(3).toInt(),item->text(5) == "Yes");
+        if(DataSensor::add(*data) == STATUS_ERROR){
+            QMessageBox::warning(this,"Warning","Failed loaded");
+            return;
+        }
+    }
+    QMessageBox::information(this,"Message","Success loaded in sql");
+}
+
+
+void MainWindow::on_sensors_treelist_itemDoubleClicked(QTreeWidgetItem *item, int column)
+{
+    ui->currentID_text->setText(item->text(0));
+    ui->topID_text->setText(item->text(1));
+    ui->rightID_text->setText(item->text(2));
+    ui->bottomID_text->setText(item->text(3));
+    ui->leftID_text->setText(item->text(4));
+    ui->parkspace_combobox->setCurrentIndex(item->text(5) == "Yes"?0:1);
 }
 

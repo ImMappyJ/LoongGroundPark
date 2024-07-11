@@ -1,6 +1,8 @@
 #ifndef SENSORSTATUS_H
 #define SENSORSTATUS_H
-#include <vector>
+#include <QString>
+#include <QList>
+#include <QObject>
 
 class Sensor{
 private:
@@ -16,10 +18,9 @@ public:
     int get_status();
     int change_status();
     bool is_park_space();
-    std::vector<Sensor*> get_nearby_sensor();
+    QList<Sensor*> get_nearby_sensor();
     int set_nearby(Sensor* t,Sensor* l,Sensor* r,Sensor* b);
     int getid();
-    ~Sensor();
 };
 
 #endif // SENSORSTATUS_H
