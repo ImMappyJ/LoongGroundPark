@@ -1,7 +1,7 @@
 .\obj\esp8266.o: APP\ESP8266\ESP8266.c
 .\obj\esp8266.o: .\User\stm32f10x.h
 .\obj\esp8266.o: .\Libraries\CMSIS\core_cm3.h
-.\obj\esp8266.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\esp8266.o: E:\keli5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\esp8266.o: .\Libraries\CMSIS\system_stm32f10x.h
 .\obj\esp8266.o: .\User\stm32f10x_conf.h
 .\obj\esp8266.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
@@ -30,8 +30,8 @@
 .\obj\esp8266.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\misc.h
 .\obj\esp8266.o: APP\ESP8266\esp8266.h
 .\obj\esp8266.o: APP\ESP8266\esp8266.h
-.\obj\esp8266.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\obj\esp8266.o: E:\keli5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\esp8266.o: .\Public\usart.h
 .\obj\esp8266.o: .\Public\system.h
-.\obj\esp8266.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\obj\esp8266.o: E:\keli5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\esp8266.o: .\Public\SysTick.h

@@ -1,12 +1,9 @@
 .\obj\main.o: User\main.c
-.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
-.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\main.o: .\Public\usart.h
 .\obj\main.o: .\Public\system.h
 .\obj\main.o: .\User\stm32f10x.h
 .\obj\main.o: .\Libraries\CMSIS\core_cm3.h
-.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\obj\main.o: E:\keli5\ARM\ARMCC\Bin\..\include\stdint.h
 .\obj\main.o: .\Libraries\CMSIS\system_stm32f10x.h
 .\obj\main.o: .\User\stm32f10x_conf.h
 .\obj\main.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_adc.h
@@ -33,6 +30,7 @@
 .\obj\main.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
 .\obj\main.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\stm32f10x_wwdg.h
 .\obj\main.o: .\Libraries\STM32F10x_StdPeriph_Driver\inc\misc.h
+.\obj\main.o: E:\keli5\ARM\ARMCC\Bin\..\include\stdio.h
 .\obj\main.o: .\Public\SysTick.h
 .\obj\main.o: .\APP\ESP8266\esp8266.h
 .\obj\main.o: .\APP\ESP8266\esp8266.h

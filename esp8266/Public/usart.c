@@ -1,13 +1,45 @@
 #include "usart.h"		 
-#include "delay.h"		 
+#include "delay.h"		
+#include "string.h"
+#include "ESP8266.h"
 
-extern uint8_t data_ready_to_send;
+int receive_finished;
+uint8_t ret;
 
 uint16_t USART_RX_STA=0;       //接收状态标记	
 uint8_t USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节
 
 uint8_t USART2_RX_FLAG;       //接收状态标记	
-extern uint8_t USART2_RX_BUF[MAX_DATA_COUNT];     //接收缓冲,最大USART_REC_LEN个字节
+uint16_t USART2_RX_STA=0;       //接收状态标记	
+uint8_t USART2_RX_BUF[MAX_DATA_COUNT];     //接收缓冲,最大USART_REC_LEN个字节
+uint8_t USART2_TX_BUF[MAX_DATA_COUNT];     //接收缓冲,最大USART_REC_LEN个字节
+
+uint8_t send_data[] = {0x01, 0x02, 0x00, 0x00, 0x00, 0x1D, 0xB8, 0x03};
+
+uint8_t receive_data1[] = {0x01, 0x02, 0x04, 0x01, 0x00, 0x00, 0x00, 0xFA, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data2[] = {0x01, 0x02, 0x04, 0x02, 0x00, 0x00, 0x00, 0xFA, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data3[] = {0x01, 0x02, 0x04, 0x04, 0x00, 0x00, 0x00, 0xFA, 0xD2, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data4[] = {0x01, 0x02, 0x04, 0x08, 0x00, 0x00, 0x00, 0xF9, 0x82, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data5[] = {0x01, 0x02, 0x04, 0x10, 0x00, 0x00, 0x00, 0xFF, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data6[] = {0x01, 0x02, 0x04, 0x20, 0x00, 0x00, 0x00, 0xF0, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data7[] = {0x01, 0x02, 0x04, 0x40, 0x00, 0x00, 0x00, 0xEE, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data8[] = {0x01, 0x02, 0x04, 0x80, 0x00, 0x00, 0x00, 0xD2, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data9[] = {0x01, 0x02, 0x04, 0x00, 0x01, 0x00, 0x00, 0xAA, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data10[] = {0x01, 0x02, 0x04, 0x00, 0x02, 0x00, 0x00, 0x5A, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data11[] = {0x01, 0x02, 0x04, 0x00, 0x04, 0x00, 0x00, 0xBA, 0x23, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data12[] = {0x01, 0x02, 0x04, 0x00, 0x08, 0x00, 0x00, 0x7A, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data13[] = {0x01, 0x02, 0x04, 0x00, 0x10, 0x00, 0x00, 0xFA, 0x27, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data14[] = {0x01, 0x02, 0x04, 0x00, 0x20, 0x00, 0x00, 0xFA, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data15[] = {0x01, 0x02, 0x04, 0x00, 0x40, 0x00, 0x00, 0xFA, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data16[] = {0x01, 0x02, 0x04, 0x00, 0x80, 0x00, 0x00, 0xFA, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data17[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x01, 0x00, 0xFA, 0x72, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data18[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x02, 0x00, 0xFA, 0x82, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data19[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x04, 0x00, 0xF9, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data20[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x08, 0x00, 0xFC, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data21[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x10, 0x00, 0xF6, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data22[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x20, 0x00, 0xE2, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+uint8_t receive_data23[] = {0x01, 0x02, 0x04, 0x00, 0x00, 0x40, 0x00, 0xCA, 0x22, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
 
 int fputc(int ch,FILE *p)  //函数默认的，在使用printf函数时自动调用
 {
@@ -185,16 +217,9 @@ u8 Serial_GetRxFlag(void) {
 			  return 0;
 }
 
-//void Serial_SendPacket(void) {
-//    Usart_SendByte(USART2,0xFF);
-//		Usart_SendArray(USART2,USART2_RX_BUF,4);
-//		Usart_SendByte(USART2,0xFE);
-//}
-
 void USART2_IRQHandler(void) {
 		static uint8_t Rxstate=0;
 	  static uint8_t pRxPacket=0;
-	  uint8_t send_data[] = {0x01, 0x02, 0x00, 0x00, 0x00, 0x1D, 0xB8, 0x03};
 
     if (USART_GetITStatus(USART2,USART_IT_RXNE) == SET) {
 				uint8_t RxData=USART_ReceiveData(USART2);
@@ -202,15 +227,12 @@ void USART2_IRQHandler(void) {
 						if(RxData==0x01){
 								Rxstate=1;
 							  pRxPacket=0;
+								USART2_RX_BUF[pRxPacket++]=RxData;
 						}
 				}else if(Rxstate==1){
 							USART2_RX_BUF[pRxPacket++]=RxData;
-					    if(pRxPacket>=16){
-								 	Rxstate=2;
-							}
-				}else if(Rxstate==2){
-							if(RxData==0x00){
-									Rxstate=0;
+					    if(pRxPacket>=14){
+								 	Rxstate=0;
 								  USART2_RX_FLAG=1;
 							}
 				}
@@ -218,9 +240,215 @@ void USART2_IRQHandler(void) {
 				USART_ClearITPendingBit(USART2,USART_IT_RXNE);
     }
 		
-		Usart_SendArray(USART2, send_data, 8);
-		delay_ms(3000);
+		if (USART_GetITStatus(USART2, USART_IT_IDLE) != SET)
+	{
+		
+		receive_finished = 1;   		                  
+		USART_ClearITPendingBit(USART2, USART_IT_IDLE);
+	}
 	
-}	
+	USART2->SR;
+	USART2->DR;
+	
+}
+
+void read_data(int read_enable)
+{
+	int j;
+
+	if (read_enable == 1)	
+	{
+		read_enable = 0;
+		USART2_TX_BUF[0] = 0x01;	
+		USART2_TX_BUF[1] = 0x02;
+		USART2_TX_BUF[2] = 0x00;
+		USART2_TX_BUF[3] = 0x00;
+		USART2_TX_BUF[4] = 0x00;
+		USART2_TX_BUF[5] = 0x1D;
+		USART2_TX_BUF[6] = 0xB8;	
+		USART2_TX_BUF[7] = 0x03;
+	}
+
+	for (j = 0; j < 8; j++)							
+	{
+		while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET); 
+		USART_SendData(USART2, USART2_TX_BUF[j]);
+	}
+	
+}
+
+void Analysis_data(void)
+{
+	
+	if (receive_finished == 1)	//接收完成
+	{
+		receive_finished = 0;
+
+          ret = memcmp(USART2_RX_BUF, receive_data1,8);
+					if(ret==0){
+           					
+						esp8266_post_1();
+						
+					}
+					
+					ret = memcmp(USART2_RX_BUF, receive_data2, 8);
+					if(ret==0){	
+            			
+						esp8266_post_2(); 
+            						
+					}
+		
+					ret = memcmp(USART2_RX_BUF, receive_data3, 8);
+					if(ret==0){			
+						
+						esp8266_post_3();
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data4, 8);
+					if(ret==0){			
+						
+						esp8266_post_4();
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data5, 8);
+					if(ret==0){			
+						
+						esp8266_post_5(); 
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data6, 8);
+					if(ret==0){			
+						
+						esp8266_post_6();
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data7, 8);
+					if(ret==0){			
+						
+						esp8266_post_7();
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data8, 8);
+					if(ret==0){			
+						
+						esp8266_post_8(); 
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data9, 8);
+					if(ret==0){			
+						
+						esp8266_post_9();
+            						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data10, 8);
+					if(ret==0){			
+						
+						esp8266_post_10();
+            						
+					}
+					
+					ret = memcmp(USART2_RX_BUF, receive_data11, 8);
+					if(ret==0){
+            						
+						esp8266_post_11(); 
+           						
+					}
+					
+					ret = memcmp(USART2_RX_BUF, receive_data12, 8);
+					if(ret==0){	
+            						
+						esp8266_post_12();
+            						
+					}
+		
+					ret = memcmp(USART2_RX_BUF, receive_data13, 8);
+					if(ret==0){			
+						
+						esp8266_post_13(); 
+          				
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data14, 8);
+					if(ret==0){			
+						
+						esp8266_post_14(); 
+            					
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data15, 8);
+					if(ret==0){			
+						
+						esp8266_post_15();
+           					
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data16, 8);
+					if(ret==0){			
+						
+						esp8266_post_16();
+           						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data17, 8);
+					if(ret==0){			
+						
+						esp8266_post_17();
+           						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data18, 8);
+					if(ret==0){			
+						
+						esp8266_post_18(); 
+          					
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data19, 8);
+					if(ret==0){			
+						
+						esp8266_post_19();
+           						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data20, 8);
+					if(ret==0){			
+						
+						esp8266_post_20();
+          					
+					}		
+					
+					ret = memcmp(USART2_RX_BUF, receive_data21, 8);
+					if(ret==0){			
+						
+						esp8266_post_21();
+          				
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data22, 8);
+					if(ret==0){			
+						
+						esp8266_post_22();
+          						
+					}	
+					
+					ret = memcmp(USART2_RX_BUF, receive_data23, 8);
+					if(ret==0){			
+						
+						esp8266_post_23();
+          						
+					}	
+		
+		USART2_RX_STA = 0;
+	}
+
+	
+}
 
 

@@ -1,0 +1,31 @@
+ESP8266：
+EN->+3.3V
+TX->A10
+RX->A9
+3V3->+3.3V
+GND->GND
+
+CH340串口：
+GND->ST-LINK GND
+TX->A3
+RX->A2
+
+ST-LINK下载器：
+SWCLK->SWCLK
+SWDIO->SWIO
+3.3V->3.3V
+GND->GND
+
+串口发送数据包说明：
+包头：（HEX） FF    包尾：（HEX）FE
+
+串口发送数据包格式：
+例如
+num1：
+FF 01 02 04 01 00 00 00 FA 1E FE
+num2：
+FF 01 02 04 02 00 00 00 FA 5A FE
+……
+
+软件：stc-isp-v6.89B（串口调试助手）     keil5
+注意：为了避免阿里云接收不到STM32串口调试助手发送的数据包，发送数据包时尽量多发送几次（串口返回至少1~2次FF）
