@@ -34,10 +34,10 @@ void MainWindow::timer_time_out()
 
 void MainWindow::initMQTT(){
     MQTTHandler::initMQTT(
-        "k153zuyAMH6.Loong|securemode=2,signmethod=hmacsha256,timestamp=1720428901230|",
-        "ecb4c06d043bdbdc99656e344dab5cb392fe6dd4fed65db71b73df2474d808a0",
+        "k153zuyAMH6.Loong|securemode=2,signmethod=hmacsha256,timestamp=ttt|",
+        "ttt",
         "Loong&k153zuyAMH6",
-        "iot-06z00i2zvzet7ip.mqtt.iothub.aliyuncs.com",1883);
+        "iot-ttt.mqtt.iothub.aliyuncs.com",1883);
     MQTTHandler::conn();
     connect(MQTTHandler::client,SIGNAL(received(QMQTT::Message)),this,SLOT(receive_message_slot(QMQTT::Message)));
     MQTTHandler::subscribe("/k153zuyAMH6/Loong/user/request");
